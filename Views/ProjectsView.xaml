@@ -6,7 +6,25 @@
         xmlns:local="clr-namespace:wada.Views"
         mc:Ignorable="d"
         Title="ProjectsView" Height="450" Width="800">
-    <Grid>
-        
+    
+    <Grid Margin="20">
+        <StackPanel>
+
+        <TextBlock Text="Project Management"
+                   FontSize="24"
+                   FontWeight="Bold"/>
+
+        <TextBox Margin="0,15,0,5"
+                 Text="{Binding ProjectName}" />
+
+        <TextBox Margin="0,5"
+                 Text="{Binding Description}" />
+
+        <Button Content="Add Project"
+                Command="{Binding AddProjectCommand}"
+                Width="150"
+                Margin="0,10"/>
+
+        </StackPanel>
     </Grid>
 </Window>
