@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using wada.Model;
+using wada.Models;
 
 namespace wada.Data
 {
