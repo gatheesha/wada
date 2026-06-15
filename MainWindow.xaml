@@ -4,37 +4,73 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:wada.ViewModels"
+        xmlns:views="clr-namespace:wada.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <!-- Wire the View to the ViewModel -->
-    <Window.DataContext>
-        <local:MainViewModel/>
-    </Window.DataContext>
+        Title="MainWindow"
+        Height="450"
+        Width="800">
+    <Grid>
 
-    <Grid Margin="15">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <!-- Input Form -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,15">
-            <TextBlock Text="Add New User" FontWeight="Bold" Margin="0,0,0,5"/>
-            <TextBox Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,5" Padding="5" />
-            <TextBox Text="{Binding NewEmail, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,5" Padding="5" />
-            <Button Content="Save to Database" Command="{Binding AddUserCommand}" Padding="5"/>
-            <Button Content="Delete from Database" Command="{Binding AddUserCommand}" Padding="5"/>
-        </StackPanel>
+        <!-- Sidebar -->
+        <views:SideBarView Grid.Column="0"/>
 
-        <!-- List of Users -->
-        <ListView Grid.Row="1" ItemsSource="{Binding Users}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}" Width="50"/>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="150"/>
-                    <GridViewColumn Header="Email" DisplayMemberBinding="{Binding Email}" Width="150"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <!-- Main Content -->
+        <Grid Grid.Column="1" Margin="15">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Input Form -->
+            <StackPanel Grid.Row="0" Margin="0,0,0,15">
+                <TextBlock Text="Add New User"
+                       FontWeight="Bold"
+                       Margin="0,0,0,5"/>
+
+                <TextBox Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="0,0,0,5"
+                     Padding="5"/>
+
+                <TextBox Text="{Binding NewEmail, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="0,0,0,5"
+                     Padding="5"/>
+
+                <Button Content="Save to Database"
+                    Command="{Binding AddUserCommand}"
+                    Padding="5"/>
+
+                <Button Content="Delete from Database"
+                    Command="{Binding AddUserCommand}"
+                    Padding="5"/>
+            </StackPanel>
+
+            <!-- User List -->
+            <ListView Grid.Row="1"
+                  ItemsSource="{Binding Users}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="ID"
+                                    DisplayMemberBinding="{Binding Id}"
+                                    Width="50"/>
+
+                        <GridViewColumn Header="Name"
+                                    DisplayMemberBinding="{Binding Name}"
+                                    Width="150"/>
+
+                        <GridViewColumn Header="Email"
+                                    DisplayMemberBinding="{Binding Email}"
+                                    Width="150"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+        </Grid>
+
     </Grid>
-</Window>
+    </Window>
