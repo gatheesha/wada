@@ -7,27 +7,32 @@
         mc:Ignorable="d"
         Title="ProjectsView" Height="450" Width="800">
 
-    <Grid Margin="20">
+    <Grid Margin="5">
 
         <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="220"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-            <!-- Sidebar -->
-            <StackPanel Background="#2C3E50">
+        <!-- Sidebar -->
+        <StackPanel Background="DarkGray">
 
-                <Button Content="Dashboard"/>
-                <Button Content="Projects"/>
-                <Button Content="Clients"/>
-                <Button Content="Settings"/>
+            <Button Content="Dashboard" Width="100" Padding="10" Margin="10"/>
+            <Button Content="Projects" Width="100" Padding="10" Margin="10"/>
+            <Button Content="Clients" Width="100" Padding="10" Margin="10"/>
+            <Button Content="Settings" Width="100" Padding="10" Margin="10 "/>
 
-            </StackPanel>
+        </StackPanel>
 
-            <!-- Content Area -->
-            <ContentControl Grid.Column="1"
+        <!-- Content Area -->
+        <ContentControl Grid.Column="1"
                     Content="{Binding CurrentView}" />
-
-    
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Projects"></TextBlock>
+        </Grid>
     </Grid>
 </Window>
