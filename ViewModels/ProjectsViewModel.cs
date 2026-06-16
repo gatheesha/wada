@@ -285,17 +285,11 @@ namespace wada.ViewModels
         // ── Called by the View after dialog confirms ───────────
 
         /// <summary>Called by dialog after user confirms adding a project.</summary>
-        public void ConfirmAddProject(string name, string description, string startDate,
-                                      string endDate, string status, List<int> clientIds)
+        public void ConfirmAddProject(string name, string description, string startDate, string startTime, int durationDays, string status, List<int> clientIds)
         {
-            int newId = _db.AddProject(name, description, startDate, endDate, status);
-            if (newId < 0) return;
-
-            foreach (var cid in clientIds)
-                _db.LinkClientToProject(cid, newId);
-
-            LoadProjects();
-            SelectedProject = Projects.FirstOrDefault(p => p.Id == newId);
+            _db.AddProject(name, description, startDate, startTime, durationDays, status, clientIds);
+            Console.WriteLine("New project added");
+            LoadProjects(); // Instantly reloads the UI panel list view
         }
 
         /// <summary>Called by dialog after user confirms editing a project.</summary>

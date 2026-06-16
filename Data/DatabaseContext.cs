@@ -32,14 +32,6 @@ namespace wada.Data
                 var command = connection.CreateCommand();
 
                 command.CommandText = @"
-                    CREATE TABLE IF NOT EXISTS Users (
-                        Id      INTEGER PRIMARY KEY AUTOINCREMENT,
-                        Name    TEXT NOT NULL,
-                        Email   TEXT NOT NULL
-                    );";
-                command.ExecuteNonQuery();
-
-                command.CommandText = @"
                     CREATE TABLE IF NOT EXISTS Client (
                         ClientID      INTEGER PRIMARY KEY AUTOINCREMENT,
                         ClientName    TEXT NOT NULL,
@@ -55,7 +47,8 @@ namespace wada.Data
                         Name          TEXT NOT NULL,
                         Description   TEXT,
                         StartDate     TEXT,
-                        EndDate       TEXT,
+                        StartTime     TEXT,
+                        DurationDays  INTEGER,
                         ProjectStatus TEXT
                     );";
                 command.ExecuteNonQuery();
@@ -97,12 +90,12 @@ namespace wada.Data
                 command.ExecuteNonQuery();
 
                 command.CommandText = @"
-                    CREATE TABLE IF NOT EXISTS ClientProject (
-                        ClientID  INTEGER,
+                    CREATE TABLE IF NOT EXISTS ProjectClient (
                         ProjectID INTEGER,
-                        PRIMARY KEY (ClientID, ProjectID),
-                        FOREIGN KEY (ClientID)  REFERENCES Client(ClientID)   ON DELETE CASCADE,
-                        FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID) ON DELETE CASCADE
+                        ClientID  INTEGER,
+                        PRIMARY KEY (ProjectID, ClientID),
+                        FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID) ON DELETE CASCADE,
+                        FOREIGN KEY (ClientID) REFERENCES Client(ClientID) ON DELETE CASCADE
                     );";
                 command.ExecuteNonQuery();
             }
@@ -301,28 +294,45 @@ namespace wada.Data
         }
 
         /// <summary>Adds a project and returns its new ProjectID.</summary>
-        public int AddProject(string name, string description, string startDate, string endDate, string status)
+        public void AddProject(string name, string description, string startDate, string startTime, int durationDays, string status, List<int> clientIds)
         {
             try
             {
                 using var connection = OpenConnection();
+                using var transaction = connection.BeginTransaction();
+
                 var command = connection.CreateCommand();
+                // Matching your exact SQLite columns 
                 command.CommandText = @"
-                    INSERT INTO Project (Name, Description, StartDate, EndDate, ProjectStatus)
-                    VALUES ($name, $description, $startDate, $endDate, $status);";
-                command.Parameters.AddWithValue("$name", name);
+            INSERT INTO Project (Name, Description, StartDate, StartTime, DurationDays, ProjectStatus)
+            VALUES ($name, $description, $startDate, $startTime, $durationDays, $status);
+            SELECT last_insert_rowid();";
+
+                command.Parameters.AddWithValue("$name", name ?? "");
                 command.Parameters.AddWithValue("$description", description ?? "");
                 command.Parameters.AddWithValue("$startDate", startDate ?? "");
-                command.Parameters.AddWithValue("$endDate", endDate ?? "");
-                command.Parameters.AddWithValue("$status", status ?? "");
-                command.ExecuteNonQuery();
+                command.Parameters.AddWithValue("$startTime", startTime ?? "");
+                command.Parameters.AddWithValue("$durationDays", durationDays);
+                command.Parameters.AddWithValue("$status", status ?? "Active");
 
-                return (int)GetLastInsertedId(connection);
+                long projectId = (long)command.ExecuteScalar();
+
+                // Save links to selected clients using the correct, verified table name
+                foreach (int clientId in clientIds)
+                {
+                    var m2mCommand = connection.CreateCommand();
+                    m2mCommand.CommandText = "INSERT INTO ProjectClient (ProjectID, ClientID) VALUES ($pid, $cid);";
+                    m2mCommand.Parameters.AddWithValue("$pid", projectId);
+                    m2mCommand.Parameters.AddWithValue("$cid", clientId);
+                    m2mCommand.ExecuteNonQuery();
+                }
+
+                transaction.Commit();
             }
             catch (SqliteException ex)
             {
-                System.Diagnostics.Debug.WriteLine($"AddProject Error: {ex.Message}");
-                return -1;
+                // This will pop up on your screen with the exact table or column name mismatch details!
+                System.Windows.MessageBox.Show($"Database Insert Failure:\n{ex.Message}\n\nStack Trace: {ex.StackTrace}", "SQL Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
         }
 
@@ -335,15 +345,17 @@ namespace wada.Data
                 command.CommandText = @"
                     UPDATE Project SET
                         Name          = $name,
-                        Description   = $description,
-                        StartDate     = $startDate,
-                        EndDate       = $endDate,
+                        Description   = $desc,
+                        StartDate     = $start,
+                        StartTime     = $time,
+                        DurationDays  = $duration,
                         ProjectStatus = $status
                     WHERE ProjectID = $id;";
                 command.Parameters.AddWithValue("$name", project.Name);
-                command.Parameters.AddWithValue("$description", project.Description ?? "");
-                command.Parameters.AddWithValue("$startDate", project.StartDate == DateTime.MinValue ? "" : project.StartDate.ToString("yyyy-MM-dd"));
-                command.Parameters.AddWithValue("$endDate", project.EndDate == DateTime.MinValue ? "" : project.EndDate.ToString("yyyy-MM-dd"));
+                command.Parameters.AddWithValue("$desc", project.Description ?? "");
+                command.Parameters.AddWithValue("$start", project.StartDate);
+                command.Parameters.AddWithValue("$time", project.StartTime);
+                command.Parameters.AddWithValue("$duration", project.DurationDays);
                 command.Parameters.AddWithValue("$status", project.Status ?? "");
                 command.Parameters.AddWithValue("$id", project.Id);
                 command.ExecuteNonQuery();
@@ -368,16 +380,13 @@ namespace wada.Data
         {
             return new ProjectModel
             {
-                Id = reader.GetInt32(0),
-                Name = reader.GetString(1),
-                Description = reader.IsDBNull(2) ? "" : reader.GetString(2),
-                StartDate = reader.IsDBNull(3) || string.IsNullOrEmpty(reader.GetString(3))
-                                ? DateTime.MinValue
-                                : DateTime.Parse(reader.GetString(3)),
-                EndDate = reader.IsDBNull(4) || string.IsNullOrEmpty(reader.GetString(4))
-                                ? DateTime.MinValue
-                                : DateTime.Parse(reader.GetString(4)),
-                Status = reader.IsDBNull(5) ? "" : reader.GetString(5)
+                Id = Convert.ToInt32(reader["ProjectID"]),
+                Name = reader["Name"]?.ToString() ?? "",
+                Description = reader["Description"]?.ToString() ?? "",
+                StartDate = DateTime.TryParse(reader["StartDate"]?.ToString(), out var d) ? d : DateTime.Today,
+                StartTime = reader["StartTime"]?.ToString() ?? "09:00",
+                DurationDays = reader["DurationDays"] != DBNull.Value ? Convert.ToInt32(reader["DurationDays"]) : 7,
+                Status = reader["ProjectStatus"]?.ToString() ?? ""
             };
         }
 

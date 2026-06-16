@@ -32,41 +32,39 @@ namespace wada.Views
             {
                 Owner = Window.GetWindow(this)
             };
+
             if (dialog.ShowDialog() == true)
             {
+                // Send string fields straight into our working engine
                 _vm.ConfirmAddProject(
                     dialog.ProjectName,
                     dialog.ProjectDescription,
-                    dialog.StartDate,
-                    dialog.EndDate,
+                    dialog.StartDate,     // String from Calendar DatePicker selection 
+                    dialog.StartTime,     // String text input box (e.g. "09:00")
+                    dialog.DurationDays,  // Integer number of days 
                     dialog.Status,
-                    dialog.SelectedClientIds);
+                    dialog.SelectedClientIds
+                );
             }
         }
 
         private void OnEditProject(ProjectModel project, List<ClientModel> allClients, List<ClientModel> linked)
         {
-            var dialog = new ProjectDialog(project, allClients, linked)
-            {
-                Owner = Window.GetWindow(this)
-            };
+            var dialog = new ProjectDialog(project, allClients, linked) { Owner = Window.GetWindow(this) };
             if (dialog.ShowDialog() == true)
             {
-                var updated = new ProjectModel
-                {
-                    Id = project.Id,
-                    Name = dialog.ProjectName,
-                    Description = dialog.ProjectDescription,
-                    StartDate = System.DateTime.TryParse(dialog.StartDate, out var sd) ? sd : System.DateTime.MinValue,
-                    EndDate = System.DateTime.TryParse(dialog.EndDate, out var ed) ? ed : System.DateTime.MinValue,
-                    Status = dialog.Status
-                };
+                project.Name = dialog.ProjectName;
+                project.Description = dialog.ProjectDescription;
+                project.StartDate = DateTime.Parse(dialog.StartDate);
+                project.StartTime = dialog.StartTime;
+                project.DurationDays = dialog.DurationDays;
+                project.Status = dialog.Status;
 
                 var previousIds = linked.Select(c => c.Id).ToList();
                 var newIds = dialog.SelectedClientIds.Except(previousIds).ToList();
                 var removedIds = previousIds.Except(dialog.SelectedClientIds).ToList();
 
-                _vm.ConfirmEditProject(updated, newIds, removedIds);
+                _vm.ConfirmEditProject(project, newIds, removedIds);
             }
         }
 
