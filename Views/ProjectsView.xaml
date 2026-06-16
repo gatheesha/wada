@@ -1,0 +1,38 @@
+﻿<Window x:Class="wada.Views.ProjectsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:wada.Views"
+        mc:Ignorable="d"
+        Title="ProjectsView" Height="450" Width="800">
+
+    <Grid Margin="5">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+        <StackPanel Background="DarkGray">
+
+            <Button Content="Dashboard" Width="100" Padding="10" Margin="10"/>
+            <Button Content="Projects" Width="100" Padding="10" Margin="10"/>
+            <Button Content="Clients" Width="100" Padding="10" Margin="10"/>
+            <Button Content="Settings" Width="100" Padding="10" Margin="10 "/>
+
+        </StackPanel>
+
+        <!-- Content Area -->
+        <ContentControl Grid.Column="1"
+                    Content="{Binding CurrentView}" />
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Projects"></TextBlock>
+        </Grid>
+    </Grid>
+</Window>
