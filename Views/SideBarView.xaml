@@ -6,21 +6,21 @@
              mc:Ignorable="d"
              Width="200">
 
-    <Grid Background="#2C3E50">
+    <Grid Background="White">
         <StackPanel Margin="10">
 
-            <TextBlock Text="MENU"
-                       Foreground="White"
+            <TextBlock Text="WADAAAAAA"
+                       Foreground="Black"
                        FontSize="18"
                        FontWeight="Bold"
                        Margin="0,0,0,20"/>
 
-            <Button Content="Dashboard" Margin="0,5"/>
-            <Button Content="Users" Margin="0,5"/>
-            <Button Content="Projects" Margin="0,5"/>
-            <Button Content="Settings" Margin="0,5"/>
+            <Button x:Name="BtnDashboard" Content="Dashboard" Margin="0,5"/>
             <Button x:Name="BtnProjects" Content="Projects" Margin="0,5"/>
             <Button x:Name="BtnClients" Content="Clients" Margin="0,5"/>
+            <Button x:Name="BtnReports" Content="Reports" Margin="0,5"/>
+            <Button x:Name="BtnEarnings" Content="Earnings" Margin="0,5"/>
+            <Button x:Name="BtnInvoices" Content="Invoices" Margin="0,5"/>
 
         </StackPanel>
     </Grid>
