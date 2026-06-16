@@ -22,8 +22,8 @@ namespace wada.Views
         {
             _vm.RequestAddProjectDialog += OnAddProject;
             _vm.RequestEditProjectDialog += OnEditProject;
-            _vm.RequestAddMilestoneDialog += OnAddMilestone;
-            _vm.RequestAddTaskDialog += OnAddTask;
+            _vm.RequestAddMilestoneDialog += OnAddMilestone;   // now (int, DateTime)
+            _vm.RequestAddTaskDialog += OnAddTask;         // now (int, DateTime)
         }
 
         private void OnAddProject(ProjectModel _, List<ClientModel> allClients, List<ClientModel> __)
@@ -68,21 +68,21 @@ namespace wada.Views
             }
         }
 
-        private void OnAddMilestone(int projectId)
+        private void OnAddMilestone(int projectId, DateTime projectDeadline)
         {
-            var dialog = new MilestoneDialog { Owner = Window.GetWindow(this) };
+            var dialog = new MilestoneDialog(projectDeadline) { Owner = Window.GetWindow(this) };
             if (dialog.ShowDialog() == true)
             {
-                _vm.ConfirmAddMilestone(projectId, dialog.MilestoneDescription, dialog.Deadline);
+                _vm.ConfirmAddMilestone(projectId, dialog.MilestoneDescription, dialog.Deadline!.Value);
             }
         }
 
-        private void OnAddTask(int milestoneId)
+        private void OnAddTask(int milestoneId, DateTime milestoneDeadline)
         {
-            var dialog = new TaskDialog { Owner = Window.GetWindow(this) };
+            var dialog = new TaskDialog(milestoneDeadline) { Owner = Window.GetWindow(this) };
             if (dialog.ShowDialog() == true)
             {
-                _vm.ConfirmAddTask(milestoneId, dialog.TaskName, dialog.TaskDescription, dialog.Deadline);
+                _vm.ConfirmAddTask(milestoneId, dialog.TaskName, dialog.TaskDescription, dialog.Deadline!.Value);
             }
         }
     }

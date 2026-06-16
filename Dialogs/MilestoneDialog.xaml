@@ -17,8 +17,8 @@
         <Label Grid.Row="0" Content="Milestone Name *" />
         <TextBox Grid.Row="1" x:Name="TxtDescription" Margin="0,0,0,6" />
 
-        <Label Grid.Row="2" Content="Deadline (yyyy-MM-dd)" />
-        <TextBox Grid.Row="3" x:Name="TxtDeadline" Margin="0,0,0,6" />
+        <Label Grid.Row="2" Content="Deadline" />
+        <DatePicker Grid.Row="3" x:Name="DpDeadline" Margin="0,0,0,6" />
 
         <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="OK"     Width="72" Margin="0,0,8,0" Click="OkButton_Click" IsDefault="True" />

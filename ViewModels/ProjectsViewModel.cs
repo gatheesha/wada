@@ -96,22 +96,11 @@ namespace wada.ViewModels
         // ── Dialog-request events (Views subscribe to these) ───
         public event Action<ProjectModel, List<ClientModel>, List<ClientModel>> RequestAddProjectDialog;
         public event Action<ProjectModel, List<ClientModel>, List<ClientModel>> RequestEditProjectDialog;
-        public event Action<int> RequestAddMilestoneDialog;
-        public event Action<int> RequestAddTaskDialog;
+        public event Action<int, DateTime> RequestAddMilestoneDialog;   // projectId, projectDeadline
+        public event Action<int, DateTime> RequestAddTaskDialog;         // milestoneId, milestoneDeadline
 
         public ProjectsViewModel()
         {
-            AddProjectCommand = new RelayCommand(_ => OnAddProject());
-            EditProjectCommand = new RelayCommand(_ => OnEditProject(), _ => SelectedProject != null);
-            DeleteProjectCommand = new RelayCommand(_ => OnDeleteProject(), _ => SelectedProject != null);
-            AddMilestoneCommand = new RelayCommand(_ => OnAddMilestone(), _ => SelectedProject != null);
-            AddTaskCommand = new RelayCommand(item => OnAddTask(item), _ => SelectedProject != null);
-            DeleteItemCommand = new RelayCommand(item => OnDeleteItem(item));
-            ToggleTaskCommand = new RelayCommand(item => OnToggleTask(item));
-
-            LoadProjects();
-            LoadAllClients();
-
             AddProjectCommand = new RelayCommand(_ => OnAddProject());
             EditProjectCommand = new RelayCommand(_ => OnEditProject(), _ => SelectedProject != null);
             DeleteProjectCommand = new RelayCommand(_ => OnDeleteProject(), _ => SelectedProject != null);
@@ -248,15 +237,22 @@ namespace wada.ViewModels
         private void OnAddMilestone()
         {
             if (_selectedProject == null) return;
-            RequestAddMilestoneDialog?.Invoke(_selectedProject.Id);
+            RequestAddMilestoneDialog?.Invoke(_selectedProject.Id, _selectedProject.EndDateTime);
         }
 
         private void OnAddTask(object param)
         {
             if (_selectedProject == null) return;
-            // param is the MilestoneID to add the task under (passed from the button tag)
             if (param is int milestoneId)
-                RequestAddTaskDialog?.Invoke(milestoneId);
+            {
+                // Find the milestone deadline from the current detail items
+                var milestoneItem = DetailItems.FirstOrDefault(
+                    d => d.IsMilestoneHeader && d.Milestone.Id == milestoneId);
+                var milestoneDeadline = milestoneItem?.Milestone.Deadline != DateTime.MinValue
+                    ? milestoneItem.Milestone.Deadline
+                    : _selectedProject.EndDateTime; // fallback to project deadline
+                RequestAddTaskDialog?.Invoke(milestoneId, milestoneDeadline);
+            }
         }
 
         private void OnDeleteItem(object param)
@@ -307,16 +303,16 @@ namespace wada.ViewModels
         }
 
         /// <summary>Called by dialog after user confirms adding a milestone.</summary>
-        public void ConfirmAddMilestone(int projectId, string description, string deadline)
+        public void ConfirmAddMilestone(int projectId, string description, DateTime deadline)
         {
-            _db.AddMilestone(projectId, description, 0, deadline);
+            _db.AddMilestone(projectId, description, 0, deadline.ToString("yyyy-MM-dd"));
             LoadDetailItems();
         }
 
         /// <summary>Called by dialog after user confirms adding a task.</summary>
-        public void ConfirmAddTask(int milestoneId, string name, string description, string deadline)
+        public void ConfirmAddTask(int milestoneId, string name, string description, DateTime deadline)
         {
-            _db.AddTask(milestoneId, name, description, deadline);
+            _db.AddTask(milestoneId, name, description, deadline.ToString("yyyy-MM-dd"));
             LoadDetailItems();
         }
 

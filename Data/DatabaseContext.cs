@@ -258,7 +258,7 @@ namespace wada.Data
             {
                 using var connection = OpenConnection();
                 var command = connection.CreateCommand();
-                command.CommandText = "SELECT ProjectID, Name, Description, StartDate, EndDate, ProjectStatus FROM Project ORDER BY Name;";
+                command.CommandText = "SELECT ProjectID, Name, Description, StartDate, StartTime, DurationDays, ProjectStatus FROM Project ORDER BY Name;";
 
                 using var reader = command.ExecuteReader();
                 while (reader.Read())
@@ -401,7 +401,7 @@ namespace wada.Data
                 using var connection = OpenConnection();
                 var command = connection.CreateCommand();
                 // INSERT OR IGNORE avoids duplicate-key errors if already linked
-                command.CommandText = "INSERT OR IGNORE INTO ClientProject (ClientID, ProjectID) VALUES ($clientId, $projectId);";
+                command.CommandText = "INSERT OR IGNORE INTO ProjectClient (ClientID, ProjectID) VALUES ($clientId, $projectId);";
                 command.Parameters.AddWithValue("$clientId", clientId);
                 command.Parameters.AddWithValue("$projectId", projectId);
                 command.ExecuteNonQuery();
@@ -415,7 +415,7 @@ namespace wada.Data
             {
                 using var connection = OpenConnection();
                 var command = connection.CreateCommand();
-                command.CommandText = "DELETE FROM ClientProject WHERE ClientID = $clientId AND ProjectID = $projectId;";
+                command.CommandText = "DELETE FROM ProjectClient WHERE ClientID = $clientId AND ProjectID = $projectId;";
                 command.Parameters.AddWithValue("$clientId", clientId);
                 command.Parameters.AddWithValue("$projectId", projectId);
                 command.ExecuteNonQuery();
@@ -434,7 +434,7 @@ namespace wada.Data
                 command.CommandText = @"
                     SELECT c.ClientID, c.ClientName, c.ClientContact, c.ClientEmail
                     FROM Client c
-                    INNER JOIN ClientProject cp ON c.ClientID = cp.ClientID
+                    INNER JOIN ProjectClient cp ON c.ClientID = cp.ClientID
                     WHERE cp.ProjectID = $projectId
                     ORDER BY c.ClientName;";
                 command.Parameters.AddWithValue("$projectId", projectId);
@@ -464,9 +464,9 @@ namespace wada.Data
                 using var connection = OpenConnection();
                 var command = connection.CreateCommand();
                 command.CommandText = @"
-                    SELECT p.ProjectID, p.Name, p.Description, p.StartDate, p.EndDate, p.ProjectStatus
+                    SELECT p.ProjectID, p.Name, p.Description, p.StartDate, p.StartTime, p.DurationDays, p.ProjectStatus
                     FROM Project p
-                    INNER JOIN ClientProject cp ON p.ProjectID = cp.ProjectID
+                    INNER JOIN ProjectClient cp ON p.ProjectID = cp.ProjectID
                     WHERE cp.ClientID = $clientId
                     ORDER BY p.Name;";
                 command.Parameters.AddWithValue("$clientId", clientId);
