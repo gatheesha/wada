@@ -1,25 +1,89 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using wada.Dialogs;
+using wada.Models;
+using wada.ViewModels;
 
 namespace wada.Views
 {
-    /// <summary>
-    /// Interaction logic for ProjectsView.xaml
-    /// </summary>
-    public partial class ProjectsView : Window
+    public partial class ProjectsView : UserControl
     {
+        private ProjectsViewModel _vm => (ProjectsViewModel)DataContext;
+
         public ProjectsView()
         {
             InitializeComponent();
+            Loaded += (_, __) => WireEvents();
+        }
+
+        private void WireEvents()
+        {
+            _vm.RequestAddProjectDialog += OnAddProject;
+            _vm.RequestEditProjectDialog += OnEditProject;
+            _vm.RequestAddMilestoneDialog += OnAddMilestone;   // now (int, DateTime)
+            _vm.RequestAddTaskDialog += OnAddTask;         // now (int, DateTime)
+        }
+
+        private void OnAddProject(ProjectModel _, List<ClientModel> allClients, List<ClientModel> __)
+        {
+            var dialog = new ProjectDialog(null, allClients, new List<ClientModel>())
+            {
+                Owner = Window.GetWindow(this)
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                // Send string fields straight into our working engine
+                _vm.ConfirmAddProject(
+                    dialog.ProjectName,
+                    dialog.ProjectDescription,
+                    dialog.StartDate,     // String from Calendar DatePicker selection 
+                    dialog.StartTime,     // String text input box (e.g. "09:00")
+                    dialog.DurationDays,  // Integer number of days 
+                    dialog.Status,
+                    dialog.SelectedClientIds
+                );
+            }
+        }
+
+        private void OnEditProject(ProjectModel project, List<ClientModel> allClients, List<ClientModel> linked)
+        {
+            var dialog = new ProjectDialog(project, allClients, linked) { Owner = Window.GetWindow(this) };
+            if (dialog.ShowDialog() == true)
+            {
+                project.Name = dialog.ProjectName;
+                project.Description = dialog.ProjectDescription;
+                project.StartDate = DateTime.Parse(dialog.StartDate);
+                project.StartTime = dialog.StartTime;
+                project.DurationDays = dialog.DurationDays;
+                project.Status = dialog.Status;
+
+                var previousIds = linked.Select(c => c.Id).ToList();
+                var newIds = dialog.SelectedClientIds.Except(previousIds).ToList();
+                var removedIds = previousIds.Except(dialog.SelectedClientIds).ToList();
+
+                _vm.ConfirmEditProject(project, newIds, removedIds);
+            }
+        }
+
+        private void OnAddMilestone(int projectId, DateTime projectDeadline)
+        {
+            var dialog = new MilestoneDialog(projectDeadline) { Owner = Window.GetWindow(this) };
+            if (dialog.ShowDialog() == true)
+            {
+                _vm.ConfirmAddMilestone(projectId, dialog.MilestoneDescription, dialog.Deadline!.Value);
+            }
+        }
+
+        private void OnAddTask(int milestoneId, DateTime milestoneDeadline)
+        {
+            var dialog = new TaskDialog(milestoneDeadline) { Owner = Window.GetWindow(this) };
+            if (dialog.ShowDialog() == true)
+            {
+                _vm.ConfirmAddTask(milestoneId, dialog.TaskName, dialog.TaskDescription, dialog.Deadline!.Value);
+            }
         }
     }
 }

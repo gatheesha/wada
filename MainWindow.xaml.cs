@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using wada.Views;
 
 namespace wada
 {
@@ -19,6 +20,13 @@ namespace wada
         public MainWindow()
         {
             InitializeComponent();
+
+            // Default view when app starts up
+            MainContentFrame.Content = new ProjectsView();
+
+            // Setup navigation hooks from your sidebar menu buttons
+            AppSideBar.BtnProjects.Click += (s, e) => MainContentFrame.Content = new ProjectsView();
+            AppSideBar.BtnClients.Click += (s, e) => MainContentFrame.Content = new ClientsView();
         }
     }
 }
