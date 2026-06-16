@@ -1,0 +1,70 @@
+<Window x:Class="wada.Dialogs.ProjectDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Project" Height="400" Width="360"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*"    />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Content="Name *" />
+        <TextBox Grid.Row="1" x:Name="TxtName" Margin="0,0,0,6" />
+
+        <Label Grid.Row="2" Content="Description" />
+        <TextBox Grid.Row="3" x:Name="TxtDescription" Height="48"
+                 TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,6" />
+
+        <Grid Grid.Row="4" Margin="0,0,0,6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <Label Content="Start Date" />
+                <TextBox x:Name="TxtStartDate" />
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <Label Content="End Date" />
+                <TextBox x:Name="TxtEndDate" />
+            </StackPanel>
+            <StackPanel Grid.Column="4">
+                <Label Content="Status" />
+                <ComboBox x:Name="CmbStatus">
+                    <ComboBoxItem Content="Active" />
+                    <ComboBoxItem Content="On Hold" />
+                    <ComboBoxItem Content="Completed" />
+                    <ComboBoxItem Content="Cancelled" />
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+
+        <Label Grid.Row="5" Content="Clients" />
+        <ListBox Grid.Row="6" x:Name="LstClients"
+                 SelectionMode="Multiple"
+                 Margin="0,0,0,8"
+                 MinHeight="80">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="OK"     Width="72" Margin="0,0,8,0" Click="OkButton_Click" IsDefault="True" />
+            <Button Content="Cancel" Width="72"                   Click="CancelButton_Click" IsCancel="True" />
+        </StackPanel>
+    </Grid>
+</Window>

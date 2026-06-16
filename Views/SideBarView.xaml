@@ -19,6 +19,8 @@
             <Button Content="Users" Margin="0,5"/>
             <Button Content="Projects" Margin="0,5"/>
             <Button Content="Settings" Margin="0,5"/>
+            <Button x:Name="BtnProjects" Content="Projects" Margin="0,5"/>
+            <Button x:Name="BtnClients" Content="Clients" Margin="0,5"/>
 
         </StackPanel>
     </Grid>

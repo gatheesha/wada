@@ -4,23 +4,22 @@ using System.Runtime.CompilerServices;
 
 namespace wada.Models
 {
-    public class ProjectModel : INotifyPropertyChanged
+    internal class TaskModel : INotifyPropertyChanged
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public string Status { get; set; } = string.Empty;
+        public DateTime Deadline { get; set; }
+        public bool IsCompleted { get; set; }
+        public int MilestoneId { get; set; }
 
-        // The View binds directly to this property, which will be updated by our real-time clock tick
-        public string DeadlineText
+        public string CountdownText
         {
             get
             {
-                if (EndDate == DateTime.MinValue) return "No deadline";
-                // Calculate accurate remaining time down to hours/minutes/seconds
-                TimeSpan remaining = EndDate.Date.AddDays(1).AddSeconds(-1) - DateTime.Now;
+                if (Deadline == DateTime.MinValue) return "";
+
+                TimeSpan remaining = Deadline.Date.AddDays(1).AddSeconds(-1) - DateTime.Now;
 
                 if (remaining.TotalSeconds <= 0) return "Overdue";
                 if (remaining.TotalDays < 1) return $"{(int)remaining.TotalHours}h {remaining.Minutes}m left";
@@ -28,7 +27,7 @@ namespace wada.Models
             }
         }
 
-        public void RefreshCountdown() => OnPropertyChanged(nameof(DeadlineText));
+        public void RefreshCountdown() => OnPropertyChanged(nameof(CountdownText));
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)

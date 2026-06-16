@@ -1,9 +1,11 @@
 ﻿<Application x:Class="wada.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:wada"
+             xmlns:conv="clr-namespace:wada.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <conv:BoolToVisibilityConverter        x:Key="BoolToVisibilityConverter" />
+        <conv:BoolToVisibilityInverseConverter x:Key="BoolToVisibilityInverseConverter" />
+        <conv:StringToVisibilityConverter      x:Key="StringToVisibilityConverter" />
     </Application.Resources>
 </Application>
