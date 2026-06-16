@@ -11,6 +11,14 @@ namespace wada
             MainContentFrame.Content = new ProjectsView();
             BtnProjects.Click += (s, e) => MainContentFrame.Content = new ProjectsView();
             BtnClients.Click += (s, e) => MainContentFrame.Content = new ClientsView();
+            BtnEarnings.Click += (s, e) =>
+            {
+                var win = new EarningsWindow
+                {
+                    Owner = this
+                };
+                win.Show();
+            };
         }
     }
 }

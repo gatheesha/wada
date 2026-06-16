@@ -98,6 +98,20 @@ namespace wada.Data
                         FOREIGN KEY (ClientID) REFERENCES Client(ClientID) ON DELETE CASCADE
                     );";
                 command.ExecuteNonQuery();
+
+                command.CommandText = @"
+    CREATE TABLE IF NOT EXISTS Earning (
+        EarningID   INTEGER PRIMARY KEY AUTOINCREMENT,
+        Amount      REAL NOT NULL,
+        Date        TEXT NOT NULL,
+        Type        TEXT NOT NULL,
+        Description TEXT,
+        ProjectID   INTEGER,
+        ClientID    INTEGER,
+        FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID) ON DELETE SET NULL,
+        FOREIGN KEY (ClientID) REFERENCES Client(ClientID) ON DELETE SET NULL
+    );";
+                command.ExecuteNonQuery();
             }
             catch (SqliteException ex)
             {
@@ -389,6 +403,7 @@ namespace wada.Data
                 Status = reader["ProjectStatus"]?.ToString() ?? ""
             };
         }
+ 
 
         // ─────────────────────────────────────────────
         //  CLIENT ↔ PROJECT LINKING
@@ -688,6 +703,162 @@ namespace wada.Data
                 command.ExecuteNonQuery();
             }
             catch (SqliteException ex) { System.Diagnostics.Debug.WriteLine($"DeleteTask Error: {ex.Message}"); }
+        }
+        // ─────────────────────────────────────────────
+        //  EARNINGS
+        // ─────────────────────────────────────────────
+
+        public List<EarningModel> GetAllEarnings()
+        {
+            var earnings = new List<EarningModel>();
+            try
+            {
+                using var connection = OpenConnection();
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+                    SELECT e.EarningID, e.Amount, e.Date, e.Type, e.Description, e.ProjectID, e.ClientID, p.Name, c.ClientName 
+                    FROM Earning e
+                    LEFT JOIN Project p ON e.ProjectID = p.ProjectID
+                    LEFT JOIN Client c ON e.ClientID = c.ClientID
+                    ORDER BY e.Date DESC;";
+
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    earnings.Add(new EarningModel
+                    {
+                        Id = reader.GetInt32(0),
+                        Amount = reader.GetDouble(1),
+                        Date = DateTime.TryParse(reader.GetString(2), out var d) ? d : DateTime.Today,
+                        Type = reader.GetString(3),
+                        Description = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                        ProjectId = reader.IsDBNull(5) ? null : reader.GetInt32(5),
+                        ClientId = reader.IsDBNull(6) ? null : reader.GetInt32(6),
+                        ProjectName = reader.IsDBNull(7) ? "N/A" : reader.GetString(7),
+                        ClientName = reader.IsDBNull(8) ? "N/A" : reader.GetString(8)
+                    });
+                }
+            }
+            catch (SqliteException ex) { System.Diagnostics.Debug.WriteLine($"GetAllEarnings Error: {ex.Message}"); }
+            return earnings;
+        }
+
+        public List<EarningModel> FilterEarnings(string searchText, string typeFilter)
+        {
+            var filtered = new List<EarningModel>();
+            try
+            {
+                using var connection = OpenConnection();
+                var command = connection.CreateCommand();
+
+                string query = @"
+                    SELECT e.EarningID, e.Amount, e.Date, e.Type, e.Description, e.ProjectID, e.ClientID, p.Name, c.ClientName 
+                    FROM Earning e
+                    LEFT JOIN Project p ON e.ProjectID = p.ProjectID
+                    LEFT JOIN Client c ON e.ClientID = c.ClientID
+                    WHERE 1=1";
+
+                if (!string.IsNullOrWhiteSpace(searchText))
+                {
+                    query += " AND (e.Description LIKE $search OR p.Name LIKE $search OR c.ClientName LIKE $search)";
+                    command.Parameters.AddWithValue("$search", $"%{searchText}%");
+                }
+
+                if (!string.IsNullOrWhiteSpace(typeFilter) && typeFilter != "All")
+                {
+                    query += " AND e.Type = $type";
+                    command.Parameters.AddWithValue("$type", typeFilter);
+                }
+
+                query += " ORDER BY e.Date DESC;";
+                command.CommandText = query;
+
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    filtered.Add(new EarningModel
+                    {
+                        Id = reader.GetInt32(0),
+                        Amount = reader.GetDouble(1),
+                        Date = DateTime.TryParse(reader.GetString(2), out var d) ? d : DateTime.Today,
+                        Type = reader.GetString(3),
+                        Description = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                        ProjectId = reader.IsDBNull(5) ? null : reader.GetInt32(5),
+                        ClientId = reader.IsDBNull(6) ? null : reader.GetInt32(6),
+                        ProjectName = reader.IsDBNull(7) ? "N/A" : reader.GetString(7),
+                        ClientName = reader.IsDBNull(8) ? "N/A" : reader.GetString(8)
+                    });
+                }
+            }
+            catch (SqliteException ex) { System.Diagnostics.Debug.WriteLine($"FilterEarnings Error: {ex.Message}"); }
+            return filtered;
+        }
+
+        public int AddEarning(double amount, string date, string type, string description, int? projectId, int? clientId)
+        {
+            try
+            {
+                using var connection = OpenConnection();
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+                    INSERT INTO Earning (Amount, Date, Type, Description, ProjectID, ClientID)
+                    VALUES ($amount, $date, $type, $description, $projectId, $clientId);";
+                command.Parameters.AddWithValue("$amount", amount);
+                command.Parameters.AddWithValue("$date", date);
+                command.Parameters.AddWithValue("$type", type);
+                command.Parameters.AddWithValue("$description", description ?? "");
+                command.Parameters.AddWithValue("$projectId", (object)projectId ?? DBNull.Value);
+                command.Parameters.AddWithValue("$clientId", (object)clientId ?? DBNull.Value);
+                command.ExecuteNonQuery();
+
+                return (int)GetLastInsertedId(connection);
+            }
+            catch (SqliteException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"AddEarning Error: {ex.Message}");
+                return -1;
+            }
+        }
+
+        public void UpdateEarning(EarningModel earning)
+        {
+            try
+            {
+                using var connection = OpenConnection();
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+                    UPDATE Earning SET
+                        Amount      = $amount,
+                        Date        = $date,
+                        Type        = $type,
+                        Description = $description,
+                        ProjectID   = $projectId,
+                        ClientID    = $clientId
+                    WHERE EarningID = $id;";
+                command.Parameters.AddWithValue("$amount", earning.Amount);
+                command.Parameters.AddWithValue("$date", earning.Date.ToString("yyyy-MM-dd"));
+                command.Parameters.AddWithValue("$type", earning.Type);
+                command.Parameters.AddWithValue("$description", earning.Description ?? "");
+                command.Parameters.AddWithValue("$projectId", (object)earning.ProjectId ?? DBNull.Value);
+                command.Parameters.AddWithValue("$clientId", (object)earning.ClientId ?? DBNull.Value);
+                command.Parameters.AddWithValue("$id", earning.Id);
+                command.ExecuteNonQuery();
+            }
+            catch (SqliteException ex) { System.Diagnostics.Debug.WriteLine($"UpdateEarning Error: {ex.Message}"); }
+        }
+
+        // New: Delete an earning by its EarningID
+        public void DeleteEarning(int earningId)
+        {
+            try
+            {
+                using var connection = OpenConnection();
+                var command = connection.CreateCommand();
+                command.CommandText = "DELETE FROM Earning WHERE EarningID = $id;";
+                command.Parameters.AddWithValue("$id", earningId);
+                command.ExecuteNonQuery();
+            }
+            catch (SqliteException ex) { System.Diagnostics.Debug.WriteLine($"DeleteEarning Error: {ex.Message}"); }
         }
     }
 }
