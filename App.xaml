@@ -4,8 +4,15 @@
              xmlns:conv="clr-namespace:wada.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <conv:BoolToVisibilityConverter        x:Key="BoolToVisibilityConverter" />
-        <conv:BoolToVisibilityInverseConverter x:Key="BoolToVisibilityInverseConverter" />
-        <conv:StringToVisibilityConverter      x:Key="StringToVisibilityConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Pink.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <conv:BoolToVisibilityConverter        x:Key="BoolToVisibilityConverter" />
+            <conv:BoolToVisibilityInverseConverter x:Key="BoolToVisibilityInverseConverter" />
+            <conv:StringToVisibilityConverter      x:Key="StringToVisibilityConverter" />
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
