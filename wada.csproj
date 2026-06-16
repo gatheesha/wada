@@ -10,12 +10,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Quicksand-VariableFont_wght.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="MahApps.Metro" Version="2.4.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.9" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Converters\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Quicksand-VariableFont_wght.ttf" />
   </ItemGroup>
 
 </Project>

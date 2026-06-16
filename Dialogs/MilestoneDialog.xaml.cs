@@ -1,9 +1,9 @@
-using System;
+using MahApps.Metro.Controls;
 using System.Windows;
 
 namespace wada.Dialogs
 {
-    public partial class MilestoneDialog : Window
+    public partial class MilestoneDialog : MetroWindow
     {
         public string MilestoneDescription { get; private set; }
         public DateTime? Deadline { get; private set; }

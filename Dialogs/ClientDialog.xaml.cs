@@ -1,9 +1,10 @@
-﻿using System.Windows;
+﻿using MahApps.Metro.Controls;
+using System.Windows;
 using wada.Models;
 
 namespace wada.Dialogs
 {
-    public partial class ClientDialog : Window
+    public partial class ClientDialog : MetroWindow
     {
         public string ClientName { get; private set; } = string.Empty;
         public string ClientContact { get; private set; } = string.Empty;

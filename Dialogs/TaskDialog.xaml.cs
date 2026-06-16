@@ -1,9 +1,10 @@
+using MahApps.Metro.Controls;
 using System;
 using System.Windows;
 
 namespace wada.Dialogs
 {
-    public partial class TaskDialog : Window
+    public partial class TaskDialog : MetroWindow
     {
         public string TaskName { get; private set; }
         public string TaskDescription { get; private set; }

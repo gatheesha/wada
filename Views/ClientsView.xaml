@@ -1,44 +1,59 @@
 ﻿<UserControl x:Class="wada.Views.ClientsView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:wada.Views"
-        xmlns:vm="clr-namespace:wada.ViewModels"
-        mc:Ignorable="d">
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:vm="clr-namespace:wada.ViewModels">
     <UserControl.DataContext>
-        <vm:ClientsViewModel x:Name="ViewModel"/>
+        <vm:ClientsViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
-    <Grid Margin="10">
+
+    <Grid Margin="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="0,0,0,10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="200"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
-            <Label Grid.Column="0" Content="Search Clients:" VerticalAlignment="Center" FontWeight="Bold"/>
-            <TextBox Grid.Column="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Margin="5,0,0,0" Padding="3" VerticalAlignment="Center"/>
-
-            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                <Button Content="Add Client" Command="{Binding AddClientCommand}" Padding="8,3" Margin="5,0,0,0"/>
-                <Button Content="Edit" Command="{Binding EditClientCommand}" Padding="15,3" Margin="5,0,0,0"/>
-                <Button Content="Delete" Command="{Binding DeleteClientCommand}" Padding="12,3" Margin="5,0,0,0"/>
+        <!-- Toolbar row -->
+        <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,10">
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                <Button Content="＋ Add Client"
+                        Command="{Binding AddClientCommand}"
+                        Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"
+                        Padding="12,6" Margin="0,0,6,0" />
+                <Button Content="✎ Edit"
+                        Command="{Binding EditClientCommand}"
+                        Style="{DynamicResource MahApps.Styles.Button.Square}"
+                        Padding="12,6" Margin="0,0,6,0" />
+                <Button Content="✕ Delete"
+                        Command="{Binding DeleteClientCommand}"
+                        Style="{DynamicResource MahApps.Styles.Button.Square}"
+                        Padding="12,6" />
             </StackPanel>
-        </Grid>
+            <TextBox DockPanel.Dock="Right"
+                     Width="240"
+                     metro:TextBoxHelper.Watermark="🔍  Search clients…"
+                     metro:TextBoxHelper.ClearTextButton="True"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="0,0,0,0" />
+        </DockPanel>
 
-        <ListView Grid.Row="1" ItemsSource="{Binding Clients}" SelectedItem="{Binding SelectedClient}">
+        <!-- Client list -->
+        <ListView Grid.Row="1"
+                  ItemsSource="{Binding Clients}"
+                  SelectedItem="{Binding SelectedClient}"
+                  Style="{DynamicResource MahApps.Styles.ListView}"
+                  BorderThickness="0">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="180"/>
-                    <GridViewColumn Header="Mobile Number" DisplayMemberBinding="{Binding MobileNumber}" Width="140"/>
-                    <GridViewColumn Header="Email Address" DisplayMemberBinding="{Binding Email}" Width="220"/>
+                    <GridViewColumn Header="Name"
+                                    DisplayMemberBinding="{Binding Name}"
+                                    Width="200" />
+                    <GridViewColumn Header="Mobile Number"
+                                    DisplayMemberBinding="{Binding MobileNumber}"
+                                    Width="160" />
+                    <GridViewColumn Header="Email Address"
+                                    DisplayMemberBinding="{Binding Email}"
+                                    Width="260" />
                 </GridView>
             </ListView.View>
         </ListView>
