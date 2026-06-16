@@ -4,8 +4,9 @@ using System.Text;
 
 namespace wada.Models
 {
-    internal class Client
+    internal class ClientModel
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string MobileNumber { get; set; }

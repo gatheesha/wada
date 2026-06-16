@@ -222,10 +222,10 @@ namespace wada.Data
                 {
                     filtered.Add(new ClientModel
                     {
-                        ClientID = reader.GetInt32(0),
-                        ClientName = reader.GetString(1),
-                        ClientContact = reader.IsDBNull(2) ? "" : reader.GetString(2),
-                        ClientEmail = reader.IsDBNull(3) ? "" : reader.GetString(3)
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(1),
+                        MobileNumber= reader.IsDBNull(2) ? "" : reader.GetString(2),
+                        Email = reader.IsDBNull(3) ? "" : reader.GetString(3)
                     });
                 }
             }
@@ -250,11 +250,11 @@ namespace wada.Data
                 {
                     filtered.Add(new ProjectModel
                     {
-                        ProjectID = reader.GetInt32(0),
+                        Id = reader.GetInt32(0),
                         Name = reader.GetString(1),
-                        StartDate = reader.IsDBNull(2) ? "" : reader.GetString(2),
-                        EndDate = reader.IsDBNull(3) ? "" : reader.GetString(3),
-                        ProjectStatus = reader.IsDBNull(4) ? "" : reader.GetString(4)
+                        StartDate = reader.IsDBNull(2) ? DateTime.MinValue : reader.GetDateTime(2),
+                        EndDate = reader.IsDBNull(3) ? DateTime.MinValue : reader.GetDateTime(3),
+                        Status = reader.IsDBNull(4) ? "" : reader.GetString(4)
                     });
                 }
             }
@@ -281,8 +281,8 @@ namespace wada.Data
                 command.Parameters.AddWithValue("$name", project.Name);
                 command.Parameters.AddWithValue("$startDate", project.StartDate);
                 command.Parameters.AddWithValue("$endDate", project.EndDate);
-                command.Parameters.AddWithValue("$status", project.ProjectStatus);
-                command.Parameters.AddWithValue("$id", project.ProjectID);
+                command.Parameters.AddWithValue("$status", project.Status);
+                command.Parameters.AddWithValue("$id", project.Id);
 
                 command.ExecuteNonQuery();
             }
