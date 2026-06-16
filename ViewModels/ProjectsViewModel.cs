@@ -72,11 +72,16 @@ namespace wada.ViewModels
         public ObservableCollection<ClientModel> AllClients { get; } = new();
 
         // ── Search ─────────────────────────────────────────────
-        private string _searchText = "";
+        private string _searchText = string.Empty;
         public string SearchText
         {
             get => _searchText;
-            set { _searchText = value; OnPropertyChanged(); Search(); }
+            set
+            {
+                _searchText = value;
+                OnPropertyChanged();
+                LoadProjects(); // Forces left pane to refresh instantly when typing
+            }
         }
 
         // ── Commands ───────────────────────────────────────────
@@ -146,10 +151,23 @@ namespace wada.ViewModels
         public void LoadProjects()
         {
             Projects.Clear();
-            var list = string.IsNullOrWhiteSpace(_searchText)
-                ? _db.GetAllProjects()
-                : _db.FilterProject(_searchText);
-            foreach (var p in list) Projects.Add(p);
+
+            // Check if user is actively performing a keyword query search filter
+            List<ProjectModel> list;
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                list = _db.GetAllProjects();
+            }
+            else
+            {
+                // Pulls matches seamlessly using your built-in Database query filter context engine
+                list = _db.FilterProjects(SearchText);
+            }
+
+            foreach (var p in list)
+            {
+                Projects.Add(p);
+            }
         }
 
         private void LoadAllClients()

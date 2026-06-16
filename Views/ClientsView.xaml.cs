@@ -1,25 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using wada.Dialogs;
+using wada.Models;
+using wada.ViewModels;
 
 namespace wada.Views
 {
-    /// <summary>
-    /// Interaction logic for ClientsView.xaml
-    /// </summary>
     public partial class ClientsView : UserControl
     {
         public ClientsView()
         {
             InitializeComponent();
+            ViewModel.RequestClientDialog += OnRequestClientDialog;
+        }
+
+        private void OnRequestClientDialog(ClientModel? target)
+        {
+            var dialog = new ClientDialog(target) { Owner = Window.GetWindow(this) };
+            if (dialog.ShowDialog() == true)
+            {
+                if (target == null)
+                {
+                    ViewModel.ConfirmAddClient(dialog.ClientName, dialog.ClientContact, dialog.ClientEmail);
+                }
+                else
+                {
+                    ViewModel.ConfirmEditClient(target, dialog.ClientName, dialog.ClientContact, dialog.ClientEmail);
+                }
+            }
         }
     }
 }

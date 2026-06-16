@@ -276,8 +276,7 @@ namespace wada.Data
             catch (SqliteException ex) { System.Diagnostics.Debug.WriteLine($"GetAllProjects Error: {ex.Message}"); }
             return projects;
         }
-
-        public List<ProjectModel> FilterProject(string searchText)
+        public List<ProjectModel> FilterProjects(string searchText)
         {
             var filtered = new List<ProjectModel>();
             try
@@ -285,7 +284,7 @@ namespace wada.Data
                 using var connection = OpenConnection();
                 var command = connection.CreateCommand();
                 command.CommandText = @"
-                    SELECT ProjectID, Name, Description, StartDate, EndDate, ProjectStatus
+                    SELECT ProjectID, Name, Description, StartDate, EndDate, ProjectStatus 
                     FROM Project
                     WHERE Name LIKE $search OR Description LIKE $search
                     ORDER BY Name;";
@@ -297,7 +296,7 @@ namespace wada.Data
                     filtered.Add(ReadProjectFromReader(reader));
                 }
             }
-            catch (SqliteException ex) { System.Diagnostics.Debug.WriteLine($"FilterProject Error: {ex.Message}"); }
+            catch (SqliteException ex) { System.Diagnostics.Debug.WriteLine($"FilterProjects Error: {ex.Message}"); }
             return filtered;
         }
 
