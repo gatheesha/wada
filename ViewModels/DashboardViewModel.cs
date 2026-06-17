@@ -24,9 +24,9 @@ namespace wada.ViewModels
         public SeriesCollection EarningsSeries { get; set; } = new();
         public List<string> XLabels { get; set; } = new();
 
-        public ICommand SetThisMonthCommand => new RelayCommand(_ => ActiveFilter = "ThisMonth");
-        public ICommand SetThisYearCommand => new RelayCommand(_ => ActiveFilter = "ThisYear");
-        public ICommand SetAllTimeCommand => new RelayCommand(_ => ActiveFilter = "AllTime");
+        public ICommand SetThisMonthCommand => new RelayCommand(_ => ActiveFilter = "Month");
+        public ICommand SetThisYearCommand => new RelayCommand(_ => ActiveFilter = "Year");
+        public ICommand SetAllTimeCommand => new RelayCommand(_ => ActiveFilter = "Time");
 
         public string ActiveFilter
         {
