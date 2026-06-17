@@ -44,13 +44,13 @@
 
                     <!-- Filter Buttons -->
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                        <Button Content="This Month" Padding="16,6" Margin="0,0,6,0"
+                        <Button Content="Month" Padding="16,6" Margin="0,0,6,0"
                                 Style="{DynamicResource MahApps.Styles.Button.Square}"
                                 Command="{Binding SetThisMonthCommand}"/>
-                        <Button Content="This Year" Padding="16,6" Margin="0,0,6,0"
+                        <Button Content="Year" Padding="16,6" Margin="0,0,6,0"
                                 Style="{DynamicResource MahApps.Styles.Button.Square}"
                                 Command="{Binding SetThisYearCommand}"/>
-                        <Button Content="All Time" Padding="16,6"
+                        <Button Content="All" Padding="16,6"
                                 Style="{DynamicResource MahApps.Styles.Button.Square}"
                                 Command="{Binding SetAllTimeCommand}"/>
                     </StackPanel>

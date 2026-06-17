@@ -5,7 +5,7 @@
     xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     Title="{Binding WindowTitle}"
-    Width="420" Height="340"
+    Width="520" Height="360"
     WindowStartupLocation="CenterOwner"
     ResizeMode="NoResize"
     ShowInTaskbar="False">
