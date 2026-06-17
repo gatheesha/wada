@@ -2,7 +2,6 @@
 
 A  desktop application built for freelancers to manage **clients, projects, milestones, tasks, and finances** — all in one place.
 
----
 
 ## Features
 
@@ -15,7 +14,6 @@ A  desktop application built for freelancers to manage **clients, projects, mile
 - **Reports** – Interactive earnings/expenses trend charts with time filters
 - **Real-time Countdowns** – Deadline tracking for projects and tasks
 
----
 
 ## Technologies
 
@@ -25,7 +23,6 @@ A  desktop application built for freelancers to manage **clients, projects, mile
 - **LiveCharts.Wpf** – Interactive charts
 - **QuestPDF** – Professional PDF invoice generation
 
----
 
 ## Prerequisites
 
@@ -33,14 +30,13 @@ A  desktop application built for freelancers to manage **clients, projects, mile
 - **.NET 10 SDK** (or later)
 - Visual Studio
 
----
 
 ## Setup Instructions
 
 ### Clone / Download the Project
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/gatheesha/wada.git
 cd wada
 ```
 
@@ -58,7 +54,6 @@ The app will automatically create:
 - `AppDatabase.db` (SQLite database)
 - `profile.json` (your freelancer details)
 
----
 
 ## Project Structure
 
@@ -74,7 +69,6 @@ wada/
 └── MainWindow.xaml    # Navigation
 ```
 
----
 
 ## Database
 
@@ -82,7 +76,6 @@ wada/
 - All data (projects, clients, tasks, finances) is persisted locally
 - No internet or cloud required
 
----
 
 ## How to Use
 
@@ -93,7 +86,5 @@ wada/
 5. **Invoices** – Fill profile → Select project → Generate PDF
 6. **Reports** – View earnings trends over time
 
----
 
 **Made for freelancers by freelancers <3.**
-
