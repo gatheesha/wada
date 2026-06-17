@@ -73,7 +73,7 @@ namespace wada.Views
             var dialog = new MilestoneDialog(projectDeadline) { Owner = Window.GetWindow(this) };
             if (dialog.ShowDialog() == true)
             {
-                _vm.ConfirmAddMilestone(projectId, dialog.MilestoneDescription, dialog.Deadline!.Value);
+                _vm.ConfirmAddMilestone(projectId, dialog.MilestoneDescription, dialog.MilestonePrice, dialog.Deadline!.Value);
             }
         }
 

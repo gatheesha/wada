@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace wada.Models
+﻿namespace wada.Models
 {
-    internal class MilestoneModel
+    public class MilestoneModel
     {
         public int Id { get; set; }
         public string Description { get; set; } = string.Empty;

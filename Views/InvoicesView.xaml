@@ -1,0 +1,190 @@
+<UserControl x:Class="wada.Views.InvoicesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:vm="clr-namespace:wada.ViewModels">
+
+    <UserControl.DataContext>
+        <vm:InvoicesViewModel x:Name="ViewModel" />
+    </UserControl.DataContext>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" MinWidth="200" />
+            <ColumnDefinition Width="4" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- ══════════════════════════════════════ -->
+        <!--  LEFT — Project list                   -->
+        <!-- ══════════════════════════════════════ -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Text="Select a project to invoice"
+                       FontSize="11"
+                       Foreground="{DynamicResource MahApps.Brushes.Gray3}"
+                       Margin="10,10,8,6" />
+
+            <ListBox Grid.Row="1"
+                     ItemsSource="{Binding Projects}"
+                     SelectedItem="{Binding SelectedProject}"
+                     BorderThickness="0"
+                     Background="Transparent"
+                     Margin="4,0,4,4">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource MahApps.Styles.ListBoxItem}">
+                        <Setter Property="Padding" Value="10,8" />
+                        <Setter Property="Margin"  Value="0,2" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}"
+                                       FontWeight="SemiBold" FontSize="13" />
+                            <TextBlock Text="{Binding Status}"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource MahApps.Brushes.Gray3}"
+                                       Margin="0,2,0,0" />
+                            <TextBlock Text="{Binding DeadlineText}"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource MahApps.Brushes.AccentBase}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+
+        <!-- Splitter -->
+        <GridSplitter Grid.Column="1" Width="4" HorizontalAlignment="Stretch"
+                      Background="{DynamicResource MahApps.Brushes.Gray8}" />
+
+        <!-- ══════════════════════════════════════ -->
+        <!--  RIGHT — Profile + Generate            -->
+        <!-- ══════════════════════════════════════ -->
+        <Grid Grid.Column="2" Margin="20,12,20,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />  <!-- Profile section -->
+                <RowDefinition Height="Auto" />  <!-- Separator -->
+                <RowDefinition Height="Auto" />  <!-- Generate button -->
+                <RowDefinition Height="*"    />  <!-- Placeholder -->
+            </Grid.RowDefinitions>
+
+            <!-- Profile fields -->
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="Your Details"
+                           FontSize="15" FontWeight="Bold" Margin="0,0,0,12" />
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Name -->
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="0,0,0,10">
+                        <TextBlock Text="Your Name" FontWeight="SemiBold" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding Profile.Name, UpdateSourceTrigger=PropertyChanged}"
+                                 metro:TextBoxHelper.Watermark="e.g. John Smith" />
+                    </StackPanel>
+
+                    <!-- Business name -->
+                    <StackPanel Grid.Row="0" Grid.Column="2" Margin="0,0,0,10">
+                        <TextBlock Text="Business / Studio Name" FontWeight="SemiBold" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding Profile.BusinessName, UpdateSourceTrigger=PropertyChanged}"
+                                 metro:TextBoxHelper.Watermark="e.g. Smith Dev" />
+                    </StackPanel>
+
+                    <!-- Email -->
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,0,0,10">
+                        <TextBlock Text="Email" FontWeight="SemiBold" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding Profile.Email, UpdateSourceTrigger=PropertyChanged}"
+                                 metro:TextBoxHelper.Watermark="you@example.com" />
+                    </StackPanel>
+
+                    <!-- Phone -->
+                    <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,0,0,10">
+                        <TextBlock Text="Phone" FontWeight="SemiBold" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding Profile.Phone, UpdateSourceTrigger=PropertyChanged}"
+                                 metro:TextBoxHelper.Watermark="+1 555 000 0000" />
+                    </StackPanel>
+
+                    <!-- Address (full width) -->
+                    <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,0,0,10">
+                        <TextBlock Text="Address" FontWeight="SemiBold" Margin="0,0,0,4" />
+                        <TextBox Text="{Binding Profile.Address, UpdateSourceTrigger=PropertyChanged}"
+                                 metro:TextBoxHelper.Watermark="Street, City, Country" />
+                    </StackPanel>
+                </Grid>
+
+                <!-- Save profile -->
+                <Button Content="💾  Save Details"
+                        Command="{Binding SaveProfileCommand}"
+                        Style="{DynamicResource MahApps.Styles.Button.Square}"
+                        Padding="12,6"
+                        HorizontalAlignment="Left"
+                        Margin="0,0,0,0" />
+            </StackPanel>
+
+            <Separator Grid.Row="1"
+                       Background="{DynamicResource MahApps.Brushes.Gray8}"
+                       Margin="0,20,0,20" />
+
+            <!-- Generate -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                <Button Content="📄  Generate Invoice PDF"
+                        Command="{Binding GenerateInvoiceCommand}"
+                        Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"
+                        Padding="16,8"
+                        FontSize="13" />
+                <TextBlock Text="← Select a project first"
+                           VerticalAlignment="Center"
+                           Margin="12,0,0,0"
+                           FontSize="11"
+                           Foreground="{DynamicResource MahApps.Brushes.Gray5}">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CanGenerate}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </StackPanel>
+
+            <!-- Placeholder when nothing selected -->
+            <TextBlock Grid.Row="3"
+                       Text="No project selected."
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       FontSize="13"
+                       Foreground="{DynamicResource MahApps.Brushes.Gray5}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding CanGenerate}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+        </Grid>
+    </Grid>
+</UserControl>
