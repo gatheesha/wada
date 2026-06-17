@@ -28,7 +28,19 @@ namespace wada.ViewModels
         public bool IsCompleted
         {
             get => _isCompleted;
-            set { _isCompleted = value; OnPropertyChanged(); }
+            set
+            {
+                _isCompleted = value;
+                OnPropertyChanged();
+                // Sync to DB
+                if (Task != null)
+                {
+                    Task.IsCompleted = value;
+                    // Call DB update
+                    var db = new DatabaseContext(); // or inject
+                    db.SetTaskCompleted(Task.Id, value);
+                }
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

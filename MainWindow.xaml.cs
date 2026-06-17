@@ -11,13 +11,15 @@ namespace wada
         {
             InitializeComponent();
 
-            BtnDashboard.Click += (s, e) => Navigate(new ProjectsView(),  BtnDashboard);
-            BtnProjects.Click  += (s, e) => Navigate(new ProjectsView(),  BtnProjects);
-            BtnClients.Click   += (s, e) => Navigate(new ClientsView(),   BtnClients);
-            BtnEarnings.Click  += (s, e) => Navigate(new EarningsView(),  BtnEarnings);
-            BtnInvoices.Click  += (s, e) => Navigate(new InvoicesView(),  BtnInvoices);
+            BtnDashboard.Click += (s, e) => Navigate(new DashboardView(), BtnDashboard);
+            BtnProjects.Click += (s, e) => Navigate(new ProjectsView(), BtnProjects);
+            BtnClients.Click += (s, e) => Navigate(new ClientsView(), BtnClients);
+            BtnEarnings.Click += (s, e) => Navigate(new EarningsView(), BtnEarnings);
+            BtnInvoices.Click += (s, e) => Navigate(new InvoicesView(), BtnInvoices);
+            BtnReports.Click += (s, e) => Navigate(new ReportsView(), BtnReports);
 
-            Navigate(new ProjectsView(), BtnProjects);
+            // Default to Dashboard
+            Navigate(new DashboardView(), BtnDashboard);
         }
 
         private void Navigate(object view, Button active)

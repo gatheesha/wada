@@ -200,14 +200,14 @@
                                                        Foreground="{DynamicResource MahApps.Brushes.Badged.Background.Disabled}"
                                                        VerticalAlignment="Center"
                                                        Margin="10,0,0,0"/>
-                                            <Button Grid.Column="4"
+                                            <Button Grid.Column="3"
                                                     Content="+ Task"
                                                     Style="{DynamicResource MahApps.Styles.Button.Square}"
                                                     Padding="8,3" Margin="0,0,4,0"
                                                     Command="{Binding DataContext.AddTaskCommand,
                                                               RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                     CommandParameter="{Binding Milestone.Id}" />
-                                            <Button Grid.Column="5"
+                                            <Button Grid.Column="4"
                                                     Content="Delete"
                                                     Style="{DynamicResource MahApps.Styles.Button.Square}"
                                                     Padding="8,3"
@@ -233,15 +233,12 @@
         </Grid.ColumnDefinitions>
 
         <!-- Checkbox replaces ToggleSwitch -->
-        <CheckBox Grid.Column="0"
-                  IsChecked="{Binding IsCompleted, Mode=TwoWay}"
-                  VerticalAlignment="Center"
-                  Margin="0,0,10,0"
-                  Command="{Binding DataContext.ToggleTaskCommand,
-                            RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                  CommandParameter="{Binding}" />
+         <CheckBox Grid.Column="0"
+          IsChecked="{Binding IsCompleted, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+          VerticalAlignment="Center"
+          Margin="0,0,10,0" />
 
-        <!-- Task name + description; strikethrough + grey when done -->
+                                            <!-- Task name + description; strikethrough + grey when done -->
         <StackPanel Grid.Column="1" VerticalAlignment="Center">
             <TextBlock FontSize="13">
                 <TextBlock.Style>
