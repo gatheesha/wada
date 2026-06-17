@@ -1,0 +1,77 @@
+<metro:MetroWindow
+    x:Class="wada.Dialogs.FinanceDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    Title="{Binding WindowTitle}"
+    Width="420" Height="340"
+    WindowStartupLocation="CenterOwner"
+    ResizeMode="NoResize"
+    ShowInTaskbar="False">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Type — plain strings so SelectedItem binds cleanly to string property -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <TextBlock Text="Type" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <ComboBox x:Name="CmbType"
+                      SelectedItem="{Binding FinanceType, Mode=TwoWay}">
+                <sys:String>Earning</sys:String>
+                <sys:String>Expense</sys:String>
+                <sys:String>Pending</sys:String>
+            </ComboBox>
+        </StackPanel>
+
+        <!-- Amount -->
+        <StackPanel Grid.Row="1" Margin="0,0,0,12">
+            <TextBlock Text="Amount ($)" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <metro:NumericUpDown x:Name="NudAmount"
+                                 Value="{Binding Amount, Mode=TwoWay}"
+                                 Minimum="0"
+                                 StringFormat="N2"
+                                 metro:TextBoxHelper.Watermark="0.00" />
+        </StackPanel>
+
+        <!-- Date -->
+        <StackPanel Grid.Row="2" Margin="0,0,0,12">
+            <TextBlock Text="Date" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <metro:DateTimePicker x:Name="DtpDate"
+                                  SelectedDateTime="{Binding Date, Mode=TwoWay}"/>
+        </StackPanel>
+
+        <!-- Description -->
+        <StackPanel Grid.Row="3" Margin="0,0,0,12">
+            <TextBlock Text="Description" FontWeight="SemiBold" Margin="0,0,0,4"/>
+            <TextBox x:Name="TxtDescription"
+                     Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     metro:TextBoxHelper.Watermark="Optional note…"
+                     Height="48"
+                     TextWrapping="Wrap"
+                     AcceptsReturn="True"
+                     VerticalScrollBarVisibility="Auto" />
+        </StackPanel>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Cancel"
+                    IsCancel="True"
+                    Style="{DynamicResource MahApps.Styles.Button.Square}"
+                    Padding="20,6" Margin="0,0,8,0"
+                    Click="BtnCancel_Click" />
+            <Button Content="Save"
+                    IsDefault="True"
+                    Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"
+                    Padding="20,6"
+                    Click="BtnSave_Click" />
+        </StackPanel>
+    </Grid>
+</metro:MetroWindow>

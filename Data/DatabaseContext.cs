@@ -689,5 +689,139 @@ namespace wada.Data
             }
             catch (SqliteException ex) { System.Diagnostics.Debug.WriteLine($"DeleteTask Error: {ex.Message}"); }
         }
+
+        // ─────────────────────────────────────────────
+        //  FINANCE
+        // ─────────────────────────────────────────────
+
+        public List<FinanceModel> GetAllFinance()
+        {
+            var records = new List<FinanceModel>();
+            try
+            {
+                using var connection = OpenConnection();
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+            SELECT FinanceID, Amount, ProjectID, Date, FinanceType, FinanceDescription
+            FROM Finance
+            ORDER BY Date DESC;";
+
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    records.Add(new FinanceModel
+                    {
+                        Id = reader.GetInt32(0),
+                        Amount = reader.IsDBNull(1) ? 0 : reader.GetDouble(1),
+                        ProjectId = reader.IsDBNull(2) ? 0 : reader.GetInt32(2),
+                        Date = reader.IsDBNull(3) || string.IsNullOrEmpty(reader.GetString(3))
+                                          ? DateTime.Today
+                                          : DateTime.Parse(reader.GetString(3)),
+                        FinanceType = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                        Description = reader.IsDBNull(5) ? "" : reader.GetString(5)
+                    });
+                }
+            }
+            catch (SqliteException ex) { System.Diagnostics.Debug.WriteLine($"GetAllFinance Error: {ex.Message}"); }
+            return records;
+        }
+
+        public List<FinanceModel> FilterFinance(string financeType)
+        {
+            var records = new List<FinanceModel>();
+            try
+            {
+                using var connection = OpenConnection();
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+            SELECT FinanceID, Amount, ProjectID, Date, FinanceType, FinanceDescription
+            FROM Finance
+            WHERE FinanceType = $type
+            ORDER BY Date DESC;";
+                command.Parameters.AddWithValue("$type", financeType);
+
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    records.Add(new FinanceModel
+                    {
+                        Id = reader.GetInt32(0),
+                        Amount = reader.IsDBNull(1) ? 0 : reader.GetDouble(1),
+                        ProjectId = reader.IsDBNull(2) ? 0 : reader.GetInt32(2),
+                        Date = reader.IsDBNull(3) || string.IsNullOrEmpty(reader.GetString(3))
+                                          ? DateTime.Today
+                                          : DateTime.Parse(reader.GetString(3)),
+                        FinanceType = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                        Description = reader.IsDBNull(5) ? "" : reader.GetString(5)
+                    });
+                }
+            }
+            catch (SqliteException ex) { System.Diagnostics.Debug.WriteLine($"FilterFinance Error: {ex.Message}"); }
+            return records;
+        }
+
+        /// <summary>Adds a finance record and returns its new FinanceID.</summary>
+        public int AddFinance(double amount, int projectId, string date, string financeType, string description)
+        {
+            try
+            {
+                using var connection = OpenConnection();
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+            INSERT INTO Finance (Amount, ProjectID, Date, FinanceType, FinanceDescription)
+            VALUES ($amount, $projectId, $date, $type, $desc);";
+                command.Parameters.AddWithValue("$amount", amount);
+                command.Parameters.AddWithValue("$projectId", projectId > 0 ? (object)projectId : DBNull.Value);
+                command.Parameters.AddWithValue("$date", date ?? "");
+                command.Parameters.AddWithValue("$type", financeType ?? "");
+                command.Parameters.AddWithValue("$desc", description ?? "");
+                command.ExecuteNonQuery();
+                return (int)GetLastInsertedId(connection);
+            }
+            catch (SqliteException ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"AddFinance Error: {ex.Message}");
+                return -1;
+            }
+        }
+
+        public void UpdateFinance(FinanceModel record)
+        {
+            try
+            {
+                using var connection = OpenConnection();
+                var command = connection.CreateCommand();
+                command.CommandText = @"
+            UPDATE Finance SET
+                Amount             = $amount,
+                ProjectID          = $projectId,
+                Date               = $date,
+                FinanceType        = $type,
+                FinanceDescription = $desc
+            WHERE FinanceID = $id;";
+                command.Parameters.AddWithValue("$amount", record.Amount);
+                command.Parameters.AddWithValue("$projectId", record.ProjectId > 0 ? (object)record.ProjectId : DBNull.Value);
+                command.Parameters.AddWithValue("$date", record.Date.ToString("yyyy-MM-dd"));
+                command.Parameters.AddWithValue("$type", record.FinanceType ?? "");
+                command.Parameters.AddWithValue("$desc", record.Description ?? "");
+                command.Parameters.AddWithValue("$id", record.Id);
+                command.ExecuteNonQuery();
+            }
+            catch (SqliteException ex) { System.Diagnostics.Debug.WriteLine($"UpdateFinance Error: {ex.Message}"); }
+        }
+
+        public void DeleteFinance(int financeId)
+        {
+            try
+            {
+                using var connection = OpenConnection();
+                var command = connection.CreateCommand();
+                command.CommandText = "DELETE FROM Finance WHERE FinanceID = $id;";
+                command.Parameters.AddWithValue("$id", financeId);
+                command.ExecuteNonQuery();
+            }
+            catch (SqliteException ex) { System.Diagnostics.Debug.WriteLine($"DeleteFinance Error: {ex.Message}"); }
+        }
+
     }
 }
