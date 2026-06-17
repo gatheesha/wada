@@ -16,7 +16,7 @@
         <!-- Toolbar row -->
         <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,10">
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                <Button Content="＋ Add Client"
+                <Button Content="＋ Add Client "
                         Command="{Binding AddClientCommand}"
                         Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"
                         Padding="12,6" Margin="0,0,6,0" />

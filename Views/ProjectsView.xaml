@@ -27,15 +27,16 @@
 
             <!-- Toolbar -->
             <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="8,8,8,4">
-                <Button Content="+ Add"
+                <Button Content="+ Add Project"
+                        Width="128"
                         Command="{Binding AddProjectCommand}"
                         Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"
                         Margin="0,0,4,0" Padding="12,6" />
-                <Button Content="Edit"
+                <Button Content="✎ Edit"
                         Command="{Binding EditProjectCommand}"
                         Style="{DynamicResource MahApps.Styles.Button.Square}"
                         Margin="0,0,4,0" Padding="12,6" />
-                <Button Content="Delete"
+                <Button Content="✕ Delete"
                         Command="{Binding DeleteProjectCommand}"
                         Style="{DynamicResource MahApps.Styles.Button.Square}"
                         Padding="12,6" />
