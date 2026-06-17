@@ -10,92 +10,74 @@
 
     <Grid Margin="12">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />   <!-- Summary cards -->
-            <RowDefinition Height="Auto" />   <!-- Toolbar -->
-            <RowDefinition Height="*"    />   <!-- Table -->
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- ═══════════════════════════════════════════════ -->
-        <!--  ROW 0 — Summary Cards                         -->
-        <!-- ═══════════════════════════════════════════════ -->
-        <UniformGrid Grid.Row="0" Rows="1" Margin="0,0,0,14">
-
-            <Border
-                    Margin="0,0,8,0" Padding="16,12" Background="#33F472D0">
-                <StackPanel>
-                    <TextBlock Text="TOTAL EARNINGS" FontSize="10" FontWeight="SemiBold"
-                               Foreground="{DynamicResource MahApps.Brushes.Gray3}" Margin="0,0,0,4"/>
-                    <TextBlock Text="{Binding TotalEarningsDisplay}" FontSize="22" FontWeight="Bold" />
-                </StackPanel>
-            </Border>
-
-            <Border 
-                    Margin="0,0,8,0" Padding="16,12" Background="#33EB2F2F">
-                <StackPanel>
-                    <TextBlock Text="TOTAL EXPENSES" FontSize="10" FontWeight="SemiBold"
-                               Foreground="{DynamicResource MahApps.Brushes.Gray3}" Margin="0,0,0,4"/>
-                    <TextBlock Text="{Binding TotalExpensesDisplay}" FontSize="22" FontWeight="Bold" />
-                </StackPanel>
-            </Border>
-
-            <Border
-                    Margin="0,0,8,0" Padding="16,12" Background="#33808080">
-                <StackPanel>
-                    <TextBlock Text="PENDING" FontSize="10" FontWeight="SemiBold"
-                               Foreground="{DynamicResource MahApps.Brushes.Gray3}" Margin="0,0,0,4"/>
-                    <TextBlock Text="{Binding PendingAmountDisplay}" FontSize="22" FontWeight="Bold" />
-                </StackPanel>
-            </Border>
-
-            <Border
-                    Margin="0" Padding="16,12" Background="#3372F49E">
-                <StackPanel>
-                    <TextBlock Text="NET BALANCE" FontSize="10" FontWeight="SemiBold"
-                               Foreground="{DynamicResource MahApps.Brushes.Gray3}" Margin="0,0,0,4"/>
-                    <TextBlock Text="{Binding NetBalanceDisplay}" FontSize="22" FontWeight="Bold" />
-                </StackPanel>
-            </Border>
-
-        </UniformGrid>
-
-        <!-- ═══════════════════════════════════════════════ -->
-        <!--  ROW 1 — Toolbar                               -->
-        <!-- ═══════════════════════════════════════════════ -->
-        <DockPanel Grid.Row="1" LastChildFill="False" Margin="0,0,0,10">
-
-            <!-- Action buttons (left) -->
+        <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,8">
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                <Button Content="＋ Add Record"
+                <Button Content="Add Record"
                         Command="{Binding AddEarningCommand}"
                         Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"
-                        Padding="12,6" Margin="0,0,6,0" />
-                <Button Content="✎ Edit"
+                        Padding="12,6" Margin="0,0,8,0" Width="120"/>
+                <Button Content="Edit"
                         Command="{Binding EditRecordCommand}"
                         Style="{DynamicResource MahApps.Styles.Button.Square}"
-                        Padding="12,6" Margin="0,0,6,0" />
-                <Button Content="✕ Delete"
+                        Padding="12,6" Margin="0,0,8,0" Width="60"/>
+                <Button Content="Delete"
                         Command="{Binding DeleteRecordCommand}"
                         Style="{DynamicResource MahApps.Styles.Button.Square}"
-                        Padding="12,6" />
+                        Padding="12,6" Width="80"/>
             </StackPanel>
+            <UniformGrid Grid.Row="2" Rows="1">
+                <Border Margin="20,0,0,0" BorderBrush="Black">
+                    <StackPanel>
+                        <TextBlock Text="TOTAL EARNINGS" FontSize="10" FontWeight="SemiBold" Foreground="{DynamicResource MahApps.Brushes.Gray3}" Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding TotalEarningsDisplay}" FontWeight="Bold" />
+                    </StackPanel>
+                </Border>
 
-            <!-- Time-range filter tabs (right) -->
+                <Border Margin="20,0,0,0" BorderBrush="Black">
+                    <StackPanel>
+                        <TextBlock Text="TOTAL EXPENSES" FontSize="10" FontWeight="SemiBold"
+                               Foreground="{DynamicResource MahApps.Brushes.Gray3}" Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding TotalExpensesDisplay}" FontWeight="Bold" />
+                    </StackPanel>
+                </Border>
+
+                <Border Margin="20,0,0,0" BorderBrush="Black">
+                    <StackPanel>
+                        <TextBlock Text="PENDING" FontSize="10" FontWeight="SemiBold"
+                               Foreground="{DynamicResource MahApps.Brushes.Gray3}" Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding PendingAmountDisplay}" FontWeight="Bold" />
+                    </StackPanel>
+                </Border>
+
+                <Border Margin="20,0,0,0" BorderBrush="Black">
+                    <StackPanel>
+                        <TextBlock Text="NET BALANCE" FontSize="10" FontWeight="SemiBold"
+                               Foreground="{DynamicResource MahApps.Brushes.Gray3}" Margin="0,0,0,4"/>
+                        <TextBlock Text="{Binding NetBalanceDisplay}" FontWeight="Bold" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-                <Button Content="This Week" Command="{Binding FilterThisWeekCommand}" Padding="12,6" Margin="0,0,4,0">
-                  <Button.Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Square}">
-                      <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsFilterThisWeek}" Value="True">
-                          <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}" />
-                          <Setter Property="Foreground" Value="White" />
-                        </DataTrigger>
-                      </Style.Triggers>
-                    </Style>
-                  </Button.Style>
+                <Button Content="This Week" Command="{Binding FilterThisWeekCommand}" Padding="12,6" Width="120" Margin="0,0,8,0">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Square}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsFilterThisWeek}" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent}" />
+                                    <Setter Property="Foreground" Value="White" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
                 </Button>
                 <Button Content="This Month"
                         Command="{Binding FilterThisMonthCommand}"
-                        Padding="12,6" Margin="0,0,4,0">
+                        Padding="12,6" Margin="0,0,8,0" Width="120">
                     <Button.Style>
                         <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Square}">
                             <Style.Triggers>
@@ -109,7 +91,8 @@
                 </Button>
                 <Button Content="All Time"
                         Command="{Binding FilterAllTimeCommand}"
-                        Padding="12,6">
+                        Padding="12,6"
+                        Width="120">
                     <Button.Style>
                         <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button.Square}">
                             <Style.Triggers>
@@ -124,18 +107,12 @@
             </StackPanel>
 
         </DockPanel>
-
-        <!-- ═══════════════════════════════════════════════ -->
-        <!--  ROW 2 — Finance Table                         -->
-        <!-- ═══════════════════════════════════════════════ -->
-        <ListView Grid.Row="2"
-                  ItemsSource="{Binding Records}"
-                  SelectedItem="{Binding SelectedRecord}"
+        
+        <ListView Grid.Row="1" ItemsSource="{Binding Records}" SelectedItem="{Binding SelectedRecord}"
                   Style="{DynamicResource MahApps.Styles.ListView}"
                   BorderThickness="0">
             <ListView.View>
                 <GridView>
-
                     <GridViewColumn Header="Date" Width="120">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -144,7 +121,7 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="Type" Width="110">
+                    <GridViewColumn Header="Type" Width="60">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <Border CornerRadius="3" Padding="8,3" HorizontalAlignment="Left">
@@ -168,21 +145,18 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="Description" Width="340">
+                    <GridViewColumn Header="Description" Width="360">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Description}" FontSize="13"
-                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{Binding Description}" FontSize="13" TextTrimming="CharacterEllipsis" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
 
-                    <GridViewColumn Header="Amount" Width="130">
+                    <GridViewColumn Header="Amount" Width="120">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding AmountDisplay}"
-                                           FontSize="13" FontWeight="SemiBold"
-                                           HorizontalAlignment="Right">
+                                <TextBlock Text="{Binding AmountDisplay}" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Right">
                                     <TextBlock.Style>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.Accent}" />
@@ -205,5 +179,6 @@
             </ListView.View>
         </ListView>
 
+        
     </Grid>
 </UserControl>

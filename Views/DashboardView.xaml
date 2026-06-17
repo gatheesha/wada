@@ -22,7 +22,7 @@
                 <Border Padding="16" Background="#33F472D0" CornerRadius="6" Margin="0,0,8,0">
                     <StackPanel>
                         <TextBlock Text="ACTIVE PROJECTS" FontSize="11" Foreground="Gray"/>
-                        <TextBlock Text="12" FontSize="28" FontWeight="Bold"/>
+                        <TextBlock Text="1" FontSize="28" FontWeight="Bold"/>
                         <!-- TODO: Bind later if needed -->
                     </StackPanel>
                 </Border>

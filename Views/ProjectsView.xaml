@@ -10,9 +10,9 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300" MinWidth="200" />
+            <ColumnDefinition Width="300" MinWidth="300" />
             <ColumnDefinition Width="4" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" MinWidth="600" />
         </Grid.ColumnDefinitions>
 
         <!-- ══════════════════════════════════════ -->
@@ -27,27 +27,23 @@
 
             <!-- Toolbar -->
             <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="8,8,8,4">
-                <Button Content="+ Add Project"
-                        Width="128"
+                <Button Content="Add Project"
+                        Width="120"
                         Command="{Binding AddProjectCommand}"
                         Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"
-                        Margin="0,0,4,0" Padding="12,6" />
-                <Button Content="✎ Edit"
+                        Padding="12,6" Margin="0,0,6,0"/>
+                <Button Content="Edit"
+                        Width="60"
                         Command="{Binding EditProjectCommand}"
                         Style="{DynamicResource MahApps.Styles.Button.Square}"
-                        Margin="0,0,4,0" Padding="12,6" />
-                <Button Content="✕ Delete"
+                        Padding="12,6" Margin="0,0,6,0"/>
+                <Button Content="Delete"
+                        Width="80"
                         Command="{Binding DeleteProjectCommand}"
                         Style="{DynamicResource MahApps.Styles.Button.Square}"
-                        Padding="12,6" />
-            </StackPanel>
+                        Padding="12,6" Margin="0,0,6,0" />
 
-            <!-- Search -->
-            <TextBox Grid.Row="1"
-                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                     metro:TextBoxHelper.Watermark="Search projects..."
-                     metro:TextBoxHelper.ClearTextButton="True"
-                     Margin="8,0,8,6" />
+            </StackPanel>
 
             <!-- Project list -->
             <ListBox Grid.Row="2"
@@ -88,10 +84,21 @@
         <!-- ══════════════════════════════════════ -->
         <!--  RIGHT PANEL — Project Detail          -->
         <!-- ══════════════════════════════════════ -->
-        <Grid Grid.Column="2" Margin="12,8,12,8">
+        <Grid Grid.Column="2" Margin="0,8,8,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBox Grid.Row="0" DockPanel.Dock="Right" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     metro:TextBoxHelper.Watermark="search projects..."
+                     metro:TextBoxHelper.ClearTextButton="True"
+                     Width="200"
+                     Padding="12,6"
+                     HorizontalAlignment="Right" />
 
             <!-- Placeholder when nothing selected -->
-            <TextBlock Text="Select a project to view details."
+            <TextBlock Grid.Row="1" Text="Select a project to view details."
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
                        FontSize="14"

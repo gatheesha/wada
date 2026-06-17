@@ -7,34 +7,37 @@
         <vm:ClientsViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
 
-    <Grid Margin="12">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <!-- Toolbar row -->
-        <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,10">
-            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                <Button Content="＋ Add Client "
+        <DockPanel Grid.Row="0" LastChildFill="False"  Margin="8,8,8,20">
+            <StackPanel Grid.Row="0" DockPanel.Dock="Left" Orientation="Horizontal">
+                    <Button Content="Add Client"
                         Command="{Binding AddClientCommand}"
                         Style="{DynamicResource MahApps.Styles.Button.Square.Accent}"
-                        Padding="12,6" Margin="0,0,6,0" />
-                <Button Content="✎ Edit"
+                        Padding="12,6" Margin="0,0,6,0" 
+                        Width="120"/>
+                    <Button Content="Edit"
                         Command="{Binding EditClientCommand}"
                         Style="{DynamicResource MahApps.Styles.Button.Square}"
-                        Padding="12,6" Margin="0,0,6,0" />
-                <Button Content="✕ Delete"
+                        Padding="12,6" Margin="0,0,6,0"
+                        Width="60"/>
+                    <Button Content="Delete"
                         Command="{Binding DeleteClientCommand}"
                         Style="{DynamicResource MahApps.Styles.Button.Square}"
-                        Padding="12,6" />
-            </StackPanel>
-            <TextBox DockPanel.Dock="Right"
-                     Width="240"
-                     metro:TextBoxHelper.Watermark="🔍  Search clients…"
+                        Padding="12,6"
+                        Width="80"/>
+                </StackPanel>
+            <TextBox Grid.Row="1" DockPanel.Dock="Right" Width="200" Padding="12,6"
+                     metro:TextBoxHelper.Watermark="search clients…"
                      metro:TextBoxHelper.ClearTextButton="True"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
-                     Margin="0,0,0,0" />
+                     />
+
         </DockPanel>
 
         <!-- Client list -->
