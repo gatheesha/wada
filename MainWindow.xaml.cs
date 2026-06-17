@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using MahApps.Metro.Controls;
 using wada.Views;
@@ -11,10 +11,11 @@ namespace wada
         {
             InitializeComponent();
 
-            BtnDashboard.Click += (s, e) => Navigate(new ProjectsView(), BtnDashboard);
-            BtnProjects.Click += (s, e) => Navigate(new ProjectsView(), BtnProjects);
-            BtnClients.Click += (s, e) => Navigate(new ClientsView(), BtnClients);
-            BtnEarnings.Click += (s, e) => Navigate(new EarningsView(), BtnEarnings);
+            BtnDashboard.Click += (s, e) => Navigate(new ProjectsView(),  BtnDashboard);
+            BtnProjects.Click  += (s, e) => Navigate(new ProjectsView(),  BtnProjects);
+            BtnClients.Click   += (s, e) => Navigate(new ClientsView(),   BtnClients);
+            BtnEarnings.Click  += (s, e) => Navigate(new EarningsView(),  BtnEarnings);
+            BtnInvoices.Click  += (s, e) => Navigate(new InvoicesView(),  BtnInvoices);
 
             Navigate(new ProjectsView(), BtnProjects);
         }

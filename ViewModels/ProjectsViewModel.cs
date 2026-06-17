@@ -303,9 +303,9 @@ namespace wada.ViewModels
         }
 
         /// <summary>Called by dialog after user confirms adding a milestone.</summary>
-        public void ConfirmAddMilestone(int projectId, string description, DateTime deadline)
+        public void ConfirmAddMilestone(int projectId, string description, double price, DateTime deadline)
         {
-            _db.AddMilestone(projectId, description, 0, deadline.ToString("yyyy-MM-dd"));
+            _db.AddMilestone(projectId, description, price, deadline.ToString("yyyy-MM-dd"));
             LoadDetailItems();
         }
 

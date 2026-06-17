@@ -9,6 +9,7 @@ namespace wada.Dialogs
         public DateTime? Deadline { get; private set; }
 
         private readonly DateTime _projectDeadline;
+        public double MilestonePrice { get; private set; }
 
         public MilestoneDialog(DateTime projectDeadline)
         {
@@ -30,6 +31,13 @@ namespace wada.Dialogs
                 return;
             }
 
+            if (string.IsNullOrWhiteSpace(TxtPrice.Text) || !double.TryParse(TxtPrice.Text, out double price) || price < 0)
+            {
+                MessageBox.Show("Please enter a valid non-negative price.", "Validation",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             if (DpDeadline.SelectedDate == null)
             {
                 MessageBox.Show("Please select a deadline.", "Validation",
@@ -47,6 +55,7 @@ namespace wada.Dialogs
 
             MilestoneDescription = TxtDescription.Text.Trim();
             Deadline = DpDeadline.SelectedDate.Value;
+            MilestonePrice = price;
             DialogResult = true;
         }
 
