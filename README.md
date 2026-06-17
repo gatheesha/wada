@@ -1,4 +1,4 @@
-# Wada - Freelance Project Management Companion
+# Wada - A freelance companion app 
 
 A  desktop application built for freelancers to manage **clients, projects, milestones, tasks, and finances** — all in one place.
 
@@ -43,8 +43,8 @@ cd wada
 ### Build the Project
 
 - Open `wada.sln` in Visual Studio
-- Set **Wada** as Startup Project
 - Build → Rebuild Solution (`Ctrl+Shift+B`)
+- Visual studio will download the required nuget packages automatically.
 
 ### Run the Application
 
